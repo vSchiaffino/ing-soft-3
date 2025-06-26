@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import '../global.css'
 import { openAiService } from '../services/openAi.service'
-import { useCurrentPageData } from '../hooks/useCurrentPageData'
 import { Message } from '../interfaces/message.interface'
 import { useMessagesFromChromeLocal } from '../hooks/useMessagesFromChromeLocal'
+import { scrapperService } from '../services/scrapper.service'
 
 export const Popup = () => {
   const [messages, setMessages] = useMessagesFromChromeLocal()
-  const pageData = useCurrentPageData()
-
   const [input, setInput] = useState<string>('')
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
@@ -16,6 +14,8 @@ export const Popup = () => {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === 'Enter' && input.trim() !== '') {
+      const pageData = await scrapperService.extractActualPageData()
+      console.log('extracted page data', pageData)
       const systemMessage: Message = {
         from: 'system',
         text: `

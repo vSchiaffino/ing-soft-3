@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Page } from '../interfaces/page-data.interface'
+import { scrapperService } from '../services/scrapper.service'
 
 export function useCurrentPageData(): Page {
   const [page, setPage] = useState<Page>({
@@ -26,17 +27,10 @@ export function useCurrentPageData(): Page {
       chrome.scripting.executeScript({
         target: { tabId: tab.id! },
         func: () => {
-          const h1 = document.querySelector('h1.ui-pdp-title')
-          const isEcommercePage =
-            window.location.href.includes('mercadolibre.com')
-          const page = {
-            data: {
-              title: h1?.innerHTML || '',
-            },
-            ecommercePage: isEcommercePage ? 'mercadolibre' : null,
-            isEcommercePage,
-          }
-          chrome.runtime.sendMessage({ type: 'PAGE_TEXT', page })
+          chrome.runtime.sendMessage({
+            type: 'PAGE_TEXT',
+            page: scrapperService.extractDataFromDocument(document),
+          })
         },
       })
     }
