@@ -1,4 +1,4 @@
 export interface Message {
-  from: 'user' | 'bot'
+  from: 'user' | 'assistant' | 'system'
   text: string
 }

@@ -14,7 +14,7 @@ export default class OpenAiService {
         { role: 'system', content: 'You are a helpful assistant.' },
       ].concat(
         messages.map((msg) => ({
-          role: msg.from === 'user' ? 'user' : 'assistant',
+          role: msg.from,
           content: msg.text,
         }))
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
