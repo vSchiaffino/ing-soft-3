@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import '../global.css'
+import { openAiService } from '../services/openAi.service'
 
 type Message = {
   from: 'user' | 'bot'
@@ -22,11 +23,22 @@ export const Popup = () => {
     chrome.storage.local.set({ messages })
   }, [messages])
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = async (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (event.key === 'Enter' && input.trim() !== '') {
       const userMessage: Message = { from: 'user', text: input }
-      const botMessage: Message = { from: 'bot', text: `Respuesta a: ${input}` }
+      const text = await openAiService.createChatCompletion([
+        ...messages,
+        userMessage,
+      ])
+      if (!text) return
+      const botMessage: Message = {
+        from: 'bot',
+        text,
+      }
       setMessages((prev) => [...prev, userMessage, botMessage])
+
       setInput('')
     }
   }
