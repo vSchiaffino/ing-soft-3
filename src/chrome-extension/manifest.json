@@ -13,5 +13,6 @@
     "48": "public/48.png",
     "192": "public/192.png"
   },
-  "permissions": ["storage"]
+  "permissions": ["scripting", "storage", "tabs", "activeTab"],
+  "host_permissions": ["<all_urls>"]
 }

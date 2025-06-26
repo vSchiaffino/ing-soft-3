@@ -9,18 +9,30 @@ type Message = {
 
 export const Popup = () => {
   useEffect(() => {
-    chrome.storage.local.get('messages', (result) => {
-      if (result.messages) {
-        setMessages(result.messages)
-      }
-    })
+    if (
+      typeof chrome !== 'undefined' &&
+      chrome.storage &&
+      chrome.storage.local
+    ) {
+      chrome.storage.local.get('messages', (result) => {
+        if (result.messages) {
+          setMessages(result.messages)
+        }
+      })
+    }
   }, [])
 
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<Message[]>([])
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
-    chrome.storage.local.set({ messages })
+    if (
+      typeof chrome !== 'undefined' &&
+      chrome.storage &&
+      chrome.storage.local
+    ) {
+      chrome.storage.local.set({ messages })
+    }
   }, [messages])
 
   const handleKeyDown = async (
