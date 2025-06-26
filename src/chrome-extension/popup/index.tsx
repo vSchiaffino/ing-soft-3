@@ -3,35 +3,14 @@ import '../global.css'
 import { openAiService } from '../services/openAi.service'
 import { useCurrentPageData } from '../hooks/useCurrentPageData'
 import { Message } from '../interfaces/message.interface'
+import { useMessagesFromChromeLocal } from '../hooks/useMessagesFromChromeLocal'
 
 export const Popup = () => {
+  const [messages, setMessages] = useMessagesFromChromeLocal()
   const pageData = useCurrentPageData()
-  useEffect(() => {
-    if (
-      typeof chrome !== 'undefined' &&
-      chrome.storage &&
-      chrome.storage.local
-    ) {
-      chrome.storage.local.get('messages', (result) => {
-        if (result.messages) {
-          setMessages(result.messages)
-        }
-      })
-    }
-  }, [])
 
   const [input, setInput] = useState<string>('')
-  const [messages, setMessages] = useState<Message[]>([])
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
-  useEffect(() => {
-    if (
-      typeof chrome !== 'undefined' &&
-      chrome.storage &&
-      chrome.storage.local
-    ) {
-      chrome.storage.local.set({ messages })
-    }
-  }, [messages])
 
   const handleKeyDown = async (
     event: React.KeyboardEvent<HTMLInputElement>
